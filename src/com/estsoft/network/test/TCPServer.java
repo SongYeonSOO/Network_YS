@@ -12,9 +12,12 @@ public class TCPServer {
 	public static final int PORT = 5050; // 2.의 포트지정에 사용하기 위한 PORT번호
 
 	public static void main(String[] args) {
+		ServerSocket serverSocket = null;
+		Socket socket =null;
+		
 		try {
 			// 1. server socket 생성
-			ServerSocket serverSocket = new ServerSocket();
+			serverSocket = new ServerSocket();
 
 			// 2. binding ( server의 ip주소+port# +socket binding )
 			// ip address 구함
@@ -30,7 +33,7 @@ public class TCPServer {
 
 			// 3.accept ; 연결요청 기다리기
 			// 4. 연결성공
-			Socket socket = serverSocket.accept(); // accept는 socket을 return함
+			socket = serverSocket.accept(); // accept는 socket을 return함
 			InetSocketAddress remoteAddress = (InetSocketAddress) socket.getRemoteSocketAddress(); // remoteAddress에 접근하려고 만듬
 			String remoteHostAddress = remoteAddress.getAddress().getHostAddress(); 
 			//remoteaddress에서 ipaddress를 다룰건데 그중에서 hostaddress를 받음
@@ -42,6 +45,7 @@ public class TCPServer {
 			InputStream inputStream = socket.getInputStream();
 			OutputStream outputStream = socket.getOutputStream();
 
+			while(true){
 			// 6. data읽기
 			// 기본적으로 byte밖에 사용불가능 -> character로는 나중에 보조스트림을 이용하는 방식으로 진행한다.
 			
@@ -71,23 +75,23 @@ public class TCPServer {
 			// 문제발생 : 현재 버퍼크기 256에 들어있는 HelloWorld만 쓰고싶은건데, 남은 246개 byte를 쓰기싫은데 안찍히게 하려면?(내가 write한거만 받도록)
 			outputStream.write(data.getBytes("UTF-8")); //getBytes : data라는 STRING을 char가 아닌 byte로 꺼낸다
 			//result : xshell에 Hello World라 치면 바로 밑에 Hello World라고 똑같이 화면에 나온다
-			
-			socket.close(); // exception이 일어나면 socket closed가 안될수도 있다 -> finally이용
+			}
+			//8.자원정리
+			//socket.close(); // exception이 일어나면 socket closed가 안될수도 있다 -> finally이용
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally{
 			//exception을 만들었을 때 socket을 closed 하기 위해서는 serversocket/socket을 try block 바깥에 만들어야한다.(선생님코드를 참고하자)
 			//8.data socket 닫기
 			// [TIP] socket을 닫아버리면 input/output stream이 자동으로 닫히니깐 따로 닫아줄 필요없다.
-			//try{
-//			if(socket != null && socket.isClosed() == false){
-//				
-//				socket.closed();
-//			}
-//			if(serverSocket!= null && serverSocket.isClosed() == false){
-//				serverSocket.closed();
-//			}
-//		}catch(IOExceptionex ){ex.printStackTrace();}
+			try{
+			if(socket != null && socket.isClosed() == false){
+				socket.close();
+			}
+			if(serverSocket!= null && serverSocket.isClosed() == false){
+				serverSocket.close();
+			}
+		}catch(IOException ex ){ex.printStackTrace();}
 }
 
 }
