@@ -8,11 +8,13 @@ public class ThreadEX01 {
 		Thread thread01 = new DigitThread(); // thread 객체 생성
 		Thread thread02 = new AlphabetThread();
 		Thread thread03 = new AlphabetThread();
+		Thread thread04 = new Thread(new UpperCaseAlphabetRunnableImpl());
 		
 		//ehdtldp tlwkrgkrl
 		thread01.start(); //thread 돌리자!!!
 		thread02.start();
 		thread03.start();
+		thread04.start();
 		
 		
 	}
