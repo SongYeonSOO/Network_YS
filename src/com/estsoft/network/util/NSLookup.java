@@ -1,4 +1,4 @@
-package com.estsoft.network.test;
+package com.estsoft.network.util;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
